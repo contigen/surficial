@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String?
+  password       String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  image          String?
+  wallets        Wallet[]
+  analyses       Analysis[]
+  ownedNFTs      NFT[]     @relation("Ownership")
+  createdNFTs    NFT[]     @relation("Creator")
+}
+
+model Wallet {
+  id        String   @id @default(cuid())
+  address   String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NFT {
+  id           String     @id @default(cuid())
+  tokenId      String
+  name         String
+  description  String?
+  imageUrl     String?
+  metadataUrl  String?
+  contractAddress String
+  blockchain   String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  ownerId      String
+  owner        User       @relation("Ownership", fields: [ownerId], references: [id])
+  creatorId    String
+  creator      User       @relation("Creator", fields: [creatorId], references: [id])
+  collectionId String?
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+  analyses     Analysis[]
+}
+
+model Collection {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  nfts        NFT[]
+}
+
+model Analysis {
+  id           String   @id @default(cuid())
+  type         String   // e.g., "forgery", "audit", "ownership"
+  result       String   // e.g., "authentic", "flagged"
+  similarity   Float
+  uniqueness   Float
+  authenticity Float
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  nftId        String
+  nft          NFT      @relation(fields: [nftId], references: [id])
+  details      Json?    // For storing additional analysis details
+}
