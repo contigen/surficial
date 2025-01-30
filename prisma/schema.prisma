@@ -17,63 +17,48 @@ model User {
   password       String
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
-  image          String?
   wallets        Wallet[]
-  analyses       Analysis[]
-  ownedNFTs      NFT[]     @relation("Ownership")
-  createdNFTs    NFT[]     @relation("Creator")
 }
 
 model Wallet {
   id        String   @id @default(cuid())
   address   String   @unique
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model NFT {
-  id           String     @id @default(cuid())
-  tokenId      String
-  name         String
-  description  String?
-  imageUrl     String?
-  metadataUrl  String?
-  contractAddress String
-  blockchain   String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  ownerId      String
-  owner        User       @relation("Ownership", fields: [ownerId], references: [id])
-  creatorId    String
-  creator      User       @relation("Creator", fields: [creatorId], references: [id])
-  collectionId String?
-  collection   Collection? @relation(fields: [collectionId], references: [id])
-  analyses     Analysis[]
+  id            String   @id @default(cuid())
+  chain String
+  tokenId       String   @unique
+  address  String
+  status        NFTStatus
+  createdAt     DateTime @default(now())
 }
 
-model Collection {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  createdAt   DateTime @default(now())
+model NFTCollection {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  address String @unique
+  createdAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  nfts        NFT[]
 }
 
-model Analysis {
+
+model NFTAnalysis {
   id           String   @id @default(cuid())
-  type         String   // e.g., "forgery", "audit", "ownership"
-  result       String   // e.g., "authentic", "flagged"
-  similarity   Float
-  uniqueness   Float
-  authenticity Float
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  userId       String
-  user         User     @relation(fields: [userId], references: [id])
-  nftId        String
-  nft          NFT      @relation(fields: [nftId], references: [id])
-  details      Json?    // For storing additional analysis details
+  name      String
+  imageURL String 
+  collection   String
+  status       NFTStatus
+  analyzedAt   DateTime @default(now())
 }
+
+enum NFTStatus {
+  VERIFIED
+  SUSPICIOUS
+  UNVERIFIED
+}
+
