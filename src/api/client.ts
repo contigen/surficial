@@ -1,23 +1,30 @@
-const BASE_URL = `https://api-cdv.unleashnfts.com/api`
+const BASE_URL = `https://api.unleashnfts.com/api`
 
 const TOKEN = process.env.BITSCRUNCH_API_KEY
+
+type ApiClientOptions =
+  | { apiURL: string; version?: never }
+  | { apiURL?: never; version: `v${number}` }
 
 export async function ApiClient<T>(
   endpoint: string,
   opts: RequestInit = {},
-  version?: string
+  options?: ApiClientOptions
 ): Promise<T> {
   if (!TOKEN) throw new Error(`API Key not set`)
+  const apiURL = options?.apiURL
+  const version = options?.version
+
   const API_VERSION = version || `v2`
+  const API_BASE_URL = apiURL || `${BASE_URL}/${API_VERSION}/${endpoint}`
   try {
-    const isFormData = opts.body instanceof FormData
     const headers: Record<string, string> = {
       ...(TOKEN ? { 'x-api-key': TOKEN } : {}),
       ...((opts.headers as Record<string, string>) || {}),
     }
-    !isFormData && (headers['Content-Type'] = 'application/json')
+    headers['accept'] = `application/json`
 
-    const response = await fetch(`${BASE_URL}/${API_VERSION}/${endpoint}`, {
+    const response = await fetch(API_BASE_URL, {
       headers,
       ...opts,
     })

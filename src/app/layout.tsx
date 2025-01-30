@@ -3,6 +3,7 @@ import './globals.css'
 import { GeistSans } from 'geist/font/sans'
 import { ThemeProvider } from '&/components/theme-provider'
 import { Toaster } from '&/components/ui/toaster'
+import { Toaster as SonnerToaster } from 'sonner'
 
 export const metadata: Metadata = {
   title: 'Surficial - AI-Powered NFT Forensics',
@@ -25,7 +26,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div vaul-drawer-wrapper=''>{children}</div>
+          {/* will be replaced */}
           <Toaster />
+          <SonnerToaster closeButton duration={2000} />
         </ThemeProvider>
       </body>
     </html>

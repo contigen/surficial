@@ -8,10 +8,8 @@ export const connectWallet = async () => {
       const signer = await provider.getSigner()
       const address = await signer.getAddress()
       return { provider, signer, address }
-    } catch (error) {
-      console.error('Failed to connect wallet:', error)
+    } catch {
+      return ''
     }
-  } else {
-    console.error('Metamask not detected')
   }
 }

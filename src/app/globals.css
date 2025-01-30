@@ -68,7 +68,7 @@
 }
 
 .sublime-hover {
-  @apply transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1;
+  @apply transition-all duration-300 ease-in-out hover:opacity-90 hover:mb-1;
 }
 
 .sublime-bg {
