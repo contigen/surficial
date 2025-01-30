@@ -10,19 +10,10 @@ import {
   Database,
 } from 'lucide-react'
 import { Footer } from '&/components/footer'
-import { ModeToggle } from '&/components/mode-toggle'
 
 export default function Home() {
   return (
     <div>
-      <header className='sticky top-0 border-b bg-background/80 backdrop-blur-sm px-16 py-2'>
-        <div className='flex justify-between items-center'>
-          <Link href='/'>
-            <span className='font-bold text-xl sublime-text'>Surficial</span>
-          </Link>
-          <ModeToggle />
-        </div>
-      </header>
       <section className='py-12 w-full md:py-24 lg:py-32 xl:py-48'>
         <div className='container px-4 md:px-6'>
           <div className='flex flex-col items-center space-y-4 text-center'>
