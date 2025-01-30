@@ -3,12 +3,12 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '&/components/ui/tabs'
 import { Overview } from '&/components/overview'
 import { RecentAnalyses } from '&/components/recent-analyses'
-import { mockNFTs } from '&/lib/mock-data'
 import { NFTGridView } from '&/components/nft-grid-view'
 import { UserProfileDialog } from '&/components/user-profile-dialog'
 import { EmptyNFTCard } from '&/components/empty-nft-card'
 import { use, useState } from 'react'
 import { NFTData } from '&/types'
+import { mockNFTs } from '&/lib/mock-data'
 
 export function DashboardView({
   nftStats,
