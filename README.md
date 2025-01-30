@@ -1,3 +1,7 @@
+# Surfiicial
+
+An AI-Powered NFT Forensics Platform to help users verify NFT authenticity, detect duplicates, and assess metadata anomalies with ease. it affords users the ability to find NFTs more effectively and intuitively based on their intent via AI-powered natural language query, powered by bitsCrunchAPIs and Google Gemini.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
