@@ -558,7 +558,7 @@ export function CollectionDetailSheet({
               Total Sale Volume
             </span>
             <Badge variant='secondary'>
-              ${Number.parseInt(whale.total_sale_volume).toLocaleString()}
+              ${whale.total_sale_volume.toLocaleString()}
             </Badge>
           </div>
           <div className='flex items-center justify-between'>
@@ -566,7 +566,7 @@ export function CollectionDetailSheet({
               Total Mint Volume
             </span>
             <Badge variant='secondary'>
-              ${Number.parseInt(whale.total_mint_volume).toLocaleString()}
+              ${whale.total_mint_volume.toLocaleString()}
             </Badge>
           </div>
         </CardContent>
