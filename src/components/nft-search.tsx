@@ -12,20 +12,28 @@ import {
 } from '&/components/ui/card'
 import { Label } from '&/components/ui/label'
 import { Spinner } from './ui/spinner'
-import { getNFTMetadata } from '&/actions'
+import {
+  getNFTMetadata,
+  updateNFTAnalysisAction,
+  updateNFTDataAction,
+} from '&/actions'
 import { EmptyState } from './empty-state'
 import { toast } from '&/hooks/use-toast'
 import { analysisResultAtom } from '&/lib/atoms'
 import { useSetAtom } from 'jotai'
 import { useRouter } from 'next/navigation'
-import { getNetworkID } from '&/lib/utils'
+import { getNetworkID, getNetworkName } from '&/lib/utils'
 import { Blockchain } from '&/types'
+import { useSession } from 'next-auth/react'
 
 export function NFTSearch() {
   const [isSearching, setIsSearching] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const setAnalysisResultAtom = useSetAtom(analysisResultAtom)
   const router = useRouter()
+  const { data: session } = useSession()
+  const userId = session?.user.id
+  const walletId = session?.user.walletId
 
   async function formAction(evt: FormEvent) {
     evt.preventDefault()
@@ -50,6 +58,24 @@ export function NFTSearch() {
       setError('An error occurred during analysis. Please try again.')
       return
     }
+
+    const _formData = new FormData()
+    _formData.set('chain', getNetworkName(nfts.metadata.chain_id))
+    _formData.set('token_id', nfts.metadata.token_id)
+    _formData.set('address', nfts.metadata.address)
+    _formData.set('wallet_id', walletId || '')
+    const verified = nfts.metadata.verified
+
+    const analysisFormData = new FormData()
+    analysisFormData.set('name', nfts.metadata.name)
+    analysisFormData.set('image_url', nfts.metadata.token_image_url)
+    analysisFormData.set('collection', nfts.metadata.collection_name)
+    analysisFormData.set('user_id', userId || '')
+    await Promise.all([
+      updateNFTDataAction(_formData, verified),
+      updateNFTAnalysisAction(analysisFormData, verified),
+    ])
+
     setIsSearching(false)
     setAnalysisResultAtom({ type: `nft`, data: [nfts] })
     toast({

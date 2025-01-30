@@ -17,14 +17,20 @@ import { useRouter } from 'next/navigation'
 import { useSetAtom } from 'jotai'
 import { analysisResultAtom } from '&/lib/atoms'
 import { EmptyState } from './empty-state'
-import { getComputedNFTCollectionMetadata } from '&/actions'
+import {
+  getComputedNFTCollectionMetadata,
+  updateNFTCollectionDataAction,
+} from '&/actions'
 import { Blockchain } from '&/types'
+import { useSession } from 'next-auth/react'
 
 export function CollectionAnalysis() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const setAnalysisResultAtom = useSetAtom(analysisResultAtom)
   const router = useRouter()
+  const { data: session } = useSession()
+  const walletId = session?.user.walletId
 
   async function formAction(evt: FormEvent) {
     evt.preventDefault()
@@ -50,6 +56,13 @@ export function CollectionAnalysis() {
       setError('Unknown NFT Collection Metadata')
       return
     }
+
+    const _formData = new FormData()
+    _formData.set('name', collections.metadata[0].collection)
+    _formData.set('address', collections.metadata[0].contract_address)
+    _formData.set('wallet_id', walletId || '')
+
+    await updateNFTCollectionDataAction(_formData)
     setIsAnalyzing(false)
     setAnalysisResultAtom({ type: `collection`, data: [collections] })
     toast({

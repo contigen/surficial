@@ -10,12 +10,14 @@ import {
 import { Upload, X, Clipboard } from 'lucide-react'
 import Image from 'next/image'
 import { Spinner } from './ui/spinner'
-import { getSimilarImage } from '&/actions'
+import { getSimilarImage, updateNFTDataAction } from '&/actions'
 import { useToast } from '&/hooks/use-toast'
 import { useRouter } from 'next/navigation'
 import { useSetAtom } from 'jotai'
 import { analysisResultAtom, dataImageAtom } from '&/lib/atoms'
 import { EmptyState } from './empty-state'
+import { useSession } from 'next-auth/react'
+import { getNetworkName } from '&/lib/utils'
 
 export function NFTUploader() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -28,6 +30,8 @@ export function NFTUploader() {
   const [error, setError] = useState<string | null>(null)
   const { toast } = useToast()
   const router = useRouter()
+  const { data: session } = useSession()
+  const walletId = session?.user.walletId
 
   function readFile(file: File | undefined) {
     if (file && file.type.startsWith(`image/`)) {
@@ -128,6 +132,16 @@ export function NFTUploader() {
       setError('An error occurred during analysis. Please try again.')
       return
     }
+
+    const _formData = new FormData()
+    _formData.set('chain', getNetworkName(nfts[0].metadata.chain_id))
+    _formData.set('token_id', nfts[0].metadata.token_id)
+    _formData.set('address', nfts[0].metadata.address)
+    _formData.set('wallet_id', walletId || '')
+    const verified = nfts[0].metadata.verified
+
+    await updateNFTDataAction(_formData, verified)
+
     setDataImageAtom(previewUrl)
     setAnalysisResultAtom({ type: `nft`, data: nfts })
     toast({

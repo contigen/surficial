@@ -13,11 +13,12 @@ datasource db {
 model User {
   id             String    @id @default(cuid())
   email          String    @unique
-  name           String?
+  name           String
   password       String
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   wallets        Wallet[]
+  NFTAnalysis NFTAnalysis[]
 }
 
 model Wallet {
@@ -25,6 +26,8 @@ model Wallet {
   address   String   @unique
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nfts     NFT[]
+  collection NFTCollection[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -32,16 +35,20 @@ model Wallet {
 model NFT {
   id            String   @id @default(cuid())
   chain String
-  tokenId       String   @unique
+  tokenId       String   
   address  String
   status        NFTStatus
+  walletId  String
+  wallet    Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
   createdAt     DateTime @default(now())
 }
 
 model NFTCollection {
   id        String   @id @default(cuid())
-  name      String   @unique
+  name      String   
   address String @unique
+  walletId  String
+  wallet    Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -53,6 +60,8 @@ model NFTAnalysis {
   imageURL String 
   collection   String
   status       NFTStatus
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade) 
   analyzedAt   DateTime @default(now())
 }
 
@@ -61,4 +70,3 @@ enum NFTStatus {
   SUSPICIOUS
   UNVERIFIED
 }
-

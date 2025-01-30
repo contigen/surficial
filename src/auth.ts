@@ -1,11 +1,26 @@
 import { loginSchema } from '&/lib/schema'
-import NextAuth from 'next-auth'
+import NextAuth, { type DefaultSession } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import Google from 'next-auth/providers/google'
-import LinkedIn from 'next-auth/providers/linkedin'
-import { getUser } from '&/lib/db-queries'
+import { addWalletToUser, getUser } from '&/lib/db-queries'
 import { compare } from 'bcrypt-ts'
 import { NextResponse } from 'next/server'
+import type { JWT } from 'next-auth/jwt'
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    walletId?: string
+    walletAddress?: string
+  }
+}
+
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      walletId?: string
+      walletAddress?: string
+    } & DefaultSession['user']
+  }
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -29,12 +44,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       },
     }),
-    Google,
-    LinkedIn,
   ],
   callbacks: {
     async authorized({ request: req, auth }) {
-      const PUBLIC_ROUTES = [`/`, `/login`, `/register`]
+      const PUBLIC_ROUTES = [`/`, `/auth`]
       const { pathname } = req.nextUrl
       const isLoggedIn = !!auth?.user
       const isAPublicRoute = PUBLIC_ROUTES.some(route => route === pathname)
@@ -48,10 +61,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true
     },
 
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      const userID = user.id
       if (user) {
         return { ...token, ...user }
       }
+      if (trigger === `update` && session) {
+        console.log(session.walletAddress)
+        const wallet = await addWalletToUser(userID!, session.walletAddress)
+        return {
+          ...token,
+          walletAddress: session?.walletAddress,
+          walletId: wallet?.id,
+        }
+      }
+
       return token
     },
     async session({ session, token }) {
@@ -60,9 +84,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
   pages: {
-    signIn: `/login`,
+    signIn: `/auth`,
     newUser: `/dashboard`,
     signOut: `/`,
-    error: `/login`,
+    error: `/auth`,
   },
 })

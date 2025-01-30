@@ -7,45 +7,28 @@ import {
 } from '&/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '&/components/ui/avatar'
 
-const recentAnalyses = [
-  {
-    id: 1,
-    name: 'CryptoPunk #3100',
-    collection: 'CryptoPunks',
-    result: 'Verified',
-    image: '/placeholder.svg',
-  },
-  {
-    id: 2,
-    name: 'Bored Ape #1234',
-    collection: 'Bored Ape Yacht Club',
-    result: 'Suspicious',
-    image: '/placeholder.svg',
-  },
-  {
-    id: 3,
-    name: 'Azuki #5678',
-    collection: 'Azuki',
-    result: 'Verified',
-    image: '/placeholder.svg',
-  },
-  {
-    id: 4,
-    name: 'Doodle #9012',
-    collection: 'Doodles',
-    result: 'Verified',
-    image: '/placeholder.svg',
-  },
-  {
-    id: 5,
-    name: 'CloneX #3456',
-    collection: 'CloneX',
-    result: 'Suspicious',
-    image: '/placeholder.svg',
-  },
-]
-
-export function RecentAnalyses() {
+export function RecentAnalyses({
+  nftAnalysis,
+}: {
+  nftAnalysis:
+    | {
+        id: string
+        collection: string
+        status: 'UNVERIFIED' | 'VERIFIED' | 'SUSPICIOUS'
+        name: string
+        imageURL: string
+      }[]
+    | null
+}) {
+  const recentAnalyses = [
+    {
+      id: 1,
+      name: 'CryptoPunk #3100',
+      collection: 'CryptoPunks',
+      result: 'Verified',
+      image: '/placeholder.svg',
+    },
+  ]
   return (
     <Card className='sublime-hover'>
       <CardHeader>
@@ -56,10 +39,10 @@ export function RecentAnalyses() {
       </CardHeader>
       <CardContent>
         <div className='space-y-8'>
-          {recentAnalyses.map(analysis => (
+          {nftAnalysis?.map(analysis => (
             <div key={analysis.id} className='flex items-center'>
               <Avatar className='h-9 w-9'>
-                <AvatarImage src={analysis.image} alt={analysis.name} />
+                <AvatarImage src={analysis.imageURL} alt={analysis.name} />
                 <AvatarFallback>{analysis.name[0]}</AvatarFallback>
               </Avatar>
               <div className='ml-4 space-y-1'>
@@ -71,13 +54,15 @@ export function RecentAnalyses() {
                 </p>
               </div>
               <div
-                className={`ml-auto font-medium ${
-                  analysis.result === 'Verified'
+                className={`ml-auto font-medium capitalize ${
+                  analysis.status === 'VERIFIED'
                     ? 'text-green-500'
+                    : analysis.status === 'UNVERIFIED'
+                    ? 'text-blue-500'
                     : 'text-red-500'
                 }`}
               >
-                {analysis.result}
+                {analysis.status.toLowerCase()}
               </div>
             </div>
           ))}

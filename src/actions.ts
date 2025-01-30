@@ -7,7 +7,13 @@ import {
   NFTVisualDescription,
   registerSchema,
 } from './lib/schema'
-import { createUser, getUser } from './lib/db-queries'
+import {
+  createUser,
+  getUser,
+  updateNFTAnalysis,
+  updateNFTCollectionData,
+  updateNFTData,
+} from './lib/db-queries'
 import { signIn } from './auth'
 import { ApiClient } from './api/client'
 import {
@@ -125,6 +131,38 @@ export async function loginUser(
     }
     return { message: `failed to login user` }
   }
+}
+
+export async function updateNFTDataAction(
+  formData: FormData,
+  verified: boolean
+) {
+  const chain = formData.get('chain')?.toString()
+  const tokenId = formData.get('token_id')?.toString()
+  const address = formData.get('address')?.toString()
+  const walletId = formData.get('wallet_id')?.toString()
+  if (!chain || !tokenId || !address || !walletId) return
+  return await updateNFTData(chain, tokenId, address, verified, walletId)
+}
+
+export async function updateNFTCollectionDataAction(formData: FormData) {
+  const name = formData.get('name')?.toString()
+  const address = formData.get('address')?.toString()
+  const walletId = formData.get('wallet_id')?.toString()
+  if (!name || !address || !walletId) return
+  return await updateNFTCollectionData(name, address, walletId)
+}
+
+export async function updateNFTAnalysisAction(
+  formData: FormData,
+  verified: boolean
+) {
+  const name = formData.get('name')?.toString()
+  const imageURL = formData.get('image_url')?.toString()
+  const collection = formData.get('collection')?.toString()
+  const userId = formData.get('user_id')?.toString()
+  if (!name || !imageURL || !collection || !userId) return
+  return await updateNFTAnalysis(name, imageURL, collection, verified, userId)
 }
 
 export async function getSimilarImage(formData: FormData) {

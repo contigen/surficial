@@ -32,6 +32,7 @@ export function WalletConnection() {
   const handleConnect = async () => {
     setIsConnecting(true)
     const result = await connectWallet()
+    setIsConnecting(false)
     if (result) {
       const { address } = result
       update({ walletAddress: address })
