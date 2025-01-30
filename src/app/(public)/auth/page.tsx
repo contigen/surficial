@@ -13,7 +13,7 @@ import { SignInForm } from './sign-in'
 
 export default function AuthPage() {
   return (
-    <div className='container flex justify-center items-center py-10 mx-auto min-h-screen'>
+    <div className='container flex justify-center items-center py-10 mx-auto h-[calc(100vh-30px)]'>
       <Card className='w-full max-w-md glass-effect'>
         <CardHeader>
           <CardTitle className='text-2xl text-center '>
@@ -39,7 +39,7 @@ export default function AuthPage() {
               <SignUpForm />
             </TabsContent>
           </Tabs>
-          <div className='mt-4 text-center'>
+          <div className='mt-1 text-center'>
             <Button variant='link' asChild>
               <Link href='/connect-wallet'>Connect Wallet</Link>
             </Button>
