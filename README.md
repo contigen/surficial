@@ -4,6 +4,10 @@ An AI-Powered NFT Forensics Platform to help users verify NFT authenticity, dete
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+### Deployment
+
+Due to external API calls & rate limiting, this project isn't hosted currently. [See Demo](https://youtu.be/7cCg66f7ybI).
+
 ## Getting Started
 
 First, run the development server:
