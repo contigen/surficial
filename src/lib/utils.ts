@@ -33,7 +33,7 @@ export function computeDynamicThreshold(
   return mean + 0.5 * stdDev
 }
 
-export function getPriceCategory(price: number): string {
+export function getPriceCategory(price: number) {
   if (price < 0.1) return 'very low price'
   if (price < 0.5) return 'low price'
   if (price < 2) return 'medium price'
