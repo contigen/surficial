@@ -38,7 +38,7 @@ export default function ConnectWalletPage() {
   }
 
   return (
-    <div className='container mx-auto py-10 flex justify-center items-center min-h-screen'>
+    <div className='container mx-auto py-10 flex justify-center items-center h-[calc(100h-30px)]'>
       <Card className='w-full max-w-md sublime-hover bg-background/80 backdrop-blur-sm'>
         <CardHeader>
           <CardTitle className='text-2xl text-center sublime-text'>
