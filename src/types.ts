@@ -298,44 +298,41 @@ export type NFTCollectionScores = {
 
 export type NFTCollectionTraders = {
   data: {
-    block_dates: string[] //"'2025-01-25 00:00:00'","'2025-01-24 00:00:00"'2025-01-23 00:00:00'" it's a very  long data, Array of date strings in ISO 8601 format "'2024-06-07 00:00:00'",
+    block_dates: string[]
     blockchain: Blockchain
     chain_id: 1
-    contract_address: string // Smart contract address
+    contract_address: string
     traders: number
     traders_buyers: number
-    traders_buyers_change: number
-    traders_buyers_trend: string // Stored as a JSON string (e.g., "[0,0,3.3147228237,0,0,0")
-    traders_change: number
-    traders_ratio: number
-    traders_ratio_change: number
-    traders_ratio_trend: string // Stored as a JSON string (e.g., "[0,0,3.3147228237,0,0,0, ,3.9937838750876197e-7")
+    traders_buyers_change: number | null
+    traders_buyers_trend: number[]
+    traders_change: number | null
     traders_sellers: number
-    traders_sellers_change: number
-    traders_sellers_trend: string // Stored as a JSON string (e.g., "[0,0,3.3147228237,0,0,0, ,3.9937838750876197e-7")
-    traders_trend: string // Stored as a JSON string (e.g., "[0,0,3.3147228237,0,0,0, ,3.9937838750876197e-7")
+    traders_sellers_change: number | null
+    traders_sellers_trend: number[]
+    traders_trend: number[]
   }[]
 } & Pagination
 
 export type NFTCollectionWashtrade = {
   data: {
-    block_dates: string[] // Array of date strings
-    blockchain: Blockchain // Name of the blockchain, e.g., "ethereum"
-    chain_id: number // ID of the blockchain, e.g., 1
-    contract_address: string // Address of the contract
-    washtrade_assets: number // Number of wash-traded assets
-    washtrade_assets_change: number // Percentage change in wash-traded assets
-    washtrade_assets_trend: string // Stringified trend data
-    washtrade_suspect_sales: number // Number of suspected wash-trade sales
-    washtrade_suspect_sales_change: number // Percentage change in suspected sales
-    washtrade_suspect_sales_trend: string // Stringified trend data "[0,0,2,0,0,0,4,0,0,4,0,0]"
-    washtrade_suspect_transactions_trend: string // Stringified transaction trend data
-    washtrade_volume: number // Total wash-traded volume
-    washtrade_volume_change: number // Percentage change in volume
-    washtrade_volume_trend: string // Stringified volume trend data "[0,0,2399.4582512125803]"
-    washtrade_wallets: number // Number of wallets involved in wash trading
-    washtrade_wallets_change: number // Percentage change in wash-trade wallets
-    washtrade_wallets_trend: string // Stringified wallets trend data
+    block_dates: string[]
+    blockchain: Blockchain
+    chain_id: number
+    contract_address: string
+    washtrade_assets: number
+    washtrade_assets_change: number | null
+    washtrade_assets_trend: string[]
+    washtrade_suspect_sales: number
+    washtrade_suspect_sales_change: number | null
+    washtrade_suspect_sales_trend: number[]
+    washtrade_suspect_transactions_trend: number[]
+    washtrade_volume: number
+    washtrade_volume_change: number | null
+    washtrade_volume_trend: number[]
+    washtrade_wallets: number
+    washtrade_wallets_change: number | null
+    washtrade_wallets_trend: number[]
   }[]
 } & Pagination
 

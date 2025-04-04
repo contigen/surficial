@@ -67,9 +67,9 @@ export function CollectionDetailSheet({
     return (
       <span className={value >= 0 ? 'text-green-500' : 'text-red-500'}>
         {value >= 0 ? (
-          <ArrowUpRight className='inline mr-1 h-4 w-4' />
+          <ArrowUpRight className='inline w-4 h-4 mr-1' />
         ) : (
-          <ArrowDownRight className='inline mr-1 h-4 w-4' />
+          <ArrowDownRight className='inline w-4 h-4 mr-1' />
         )}
         {formattedValue}%
       </span>
@@ -96,7 +96,7 @@ export function CollectionDetailSheet({
           >
             <Badge variant='outline' className='flex items-center gap-1'>
               {social.platform} {metadata?.length > 1 ? `(${index + 1})` : ''}
-              <ExternalLink className='h-3 w-3' />
+              <ExternalLink className='w-3 h-3' />
             </Badge>
           </a>
         ))
@@ -157,7 +157,7 @@ export function CollectionDetailSheet({
               <Card>
                 <CardHeader>
                   <CardTitle className='flex items-center gap-2'>
-                    <Info className='h-4 w-4' />
+                    <Info className='w-4 h-4' />
                     Collection Information{' '}
                     {metadata.length > 1
                       ? `(${idx + 1}/${metadata.length})`
@@ -194,12 +194,12 @@ export function CollectionDetailSheet({
               <Card>
                 <CardHeader>
                   <CardTitle className='flex items-center gap-2'>
-                    <Info className='h-4 w-4' />
+                    <Info className='w-4 h-4' />
                     Description
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className='whitespace-pre-line text-sm text-muted-foreground'>
+                  <p className='text-sm whitespace-pre-line text-muted-foreground'>
                     {meta.description}
                   </p>
                 </CardContent>
@@ -212,7 +212,7 @@ export function CollectionDetailSheet({
           <Card key={index}>
             <CardHeader>
               <CardTitle className='flex items-center gap-2'>
-                <BarChart3 className='h-4 w-4' />
+                <BarChart3 className='w-4 h-4' />
                 Collection Analytics{' '}
                 {analytics.length > 1
                   ? `(${index + 1}/${analytics.length})`
@@ -260,7 +260,7 @@ export function CollectionDetailSheet({
           <Card key={index}>
             <CardHeader>
               <CardTitle className='flex items-center gap-2'>
-                <Shield className='h-4 w-4' />
+                <Shield className='w-4 h-4' />
                 Collection Profile{' '}
                 {profile.length > 1 ? `(${index + 1}/${profile.length})` : ''}
               </CardTitle>
@@ -299,7 +299,7 @@ export function CollectionDetailSheet({
 
   const renderAnalyticsContent = () => {
     return analytics?.map((analytic, index) => {
-      const volumeData = JSON.parse(analytic.volume_trend).map(
+      const volumeData = analytic.volume_trend.map(
         (volume: number, i: number) => ({
           date: analytic.block_dates[i],
           volume,
@@ -331,7 +331,7 @@ export function CollectionDetailSheet({
   }
 
   const renderHoldersContent = () => {
-    return holders?.map((holder, index) => {
+    return (Array.isArray(holders) ? holders : [])?.map((holder, index) => {
       const holderData = [
         { name: '1 Token', value: Number.parseInt(holder.holders_tokens_1) },
         { name: '2 Tokens', value: Number.parseInt(holder.holders_tokens_2) },
@@ -453,7 +453,7 @@ export function CollectionDetailSheet({
                   Traders Change
                 </span>
                 <Badge variant='outline'>
-                  {formatChange(trader.traders_change)}
+                  {formatChange(trader.traders_change ?? 0)}
                 </Badge>
               </div>
               <div className='flex items-center justify-between'>
@@ -476,9 +476,7 @@ export function CollectionDetailSheet({
                 <span className='text-sm text-muted-foreground'>
                   Trader Ratio
                 </span>
-                <Badge variant='secondary'>
-                  {trader.traders_ratio.toFixed(2)}
-                </Badge>
+                <Badge variant='secondary'>Unknown</Badge>
               </div>
             </CardContent>
           </Card>
@@ -500,7 +498,7 @@ export function CollectionDetailSheet({
                   <Legend />
                   <Line
                     type='monotone'
-                    data={JSON.parse(trader.traders_buyers_trend).map(
+                    data={trader.traders_buyers_trend?.map(
                       (value: number, i: number) => ({
                         date: trader.block_dates[i],
                         value,
@@ -510,7 +508,7 @@ export function CollectionDetailSheet({
                   />
                   <Line
                     type='monotone'
-                    data={JSON.parse(trader.traders_sellers_trend).map(
+                    data={trader.traders_sellers_trend?.map(
                       (value: number, i: number) => ({
                         date: trader.block_dates[i],
                         value,
@@ -642,18 +640,16 @@ export function CollectionDetailSheet({
                   <Legend />
                   <Line
                     type='monotone'
-                    data={JSON.parse(wash.washtrade_assets_trend).map(
-                      (value: number, i: number) => ({
-                        date: wash.block_dates[i],
-                        value,
-                      })
-                    )}
+                    data={wash.washtrade_assets_trend?.map((value, i) => ({
+                      date: wash.block_dates[i],
+                      value,
+                    }))}
                     name='Assets'
                   />
                   <Line
                     type='monotone'
-                    data={JSON.parse(wash.washtrade_suspect_sales_trend).map(
-                      (value: number, i: number) => ({
+                    data={wash.washtrade_suspect_sales_trend?.map(
+                      (value, i) => ({
                         date: wash.block_dates[i],
                         value,
                       })
@@ -662,8 +658,8 @@ export function CollectionDetailSheet({
                   />
                   <Line
                     type='monotone'
-                    data={JSON.parse(wash.washtrade_volume_trend).map(
-                      (value: number, i: number) => ({
+                    data={wash.washtrade_volume_trend?.map(
+                      (value, i: number) => ({
                         date: wash.block_dates[i],
                         value,
                       })
@@ -681,7 +677,7 @@ export function CollectionDetailSheet({
 
   return (
     <Drawer open={!!collection} onOpenChange={onClose}>
-      <DrawerContent className='overflow-hidden p-0'>
+      <DrawerContent className='p-0 overflow-hidden'>
         <ScrollArea className='overflow-y-auto'>
           <div className='flex flex-col h-full'>
             <div className='relative h-64'>
@@ -698,7 +694,7 @@ export function CollectionDetailSheet({
                       transition={{ duration: 0.5, delay: idx * 0.2 }}
                     />
                     <motion.div
-                      className='rounded-2xl p-2 absolute bottom-4 right-4 backdrop-blur-3xl'
+                      className='absolute p-2 rounded-2xl bottom-4 right-4 backdrop-blur-3xl'
                       style={{
                         backgroundImage: `linear-gradient(135deg, ${colors.join(
                           ', '
@@ -713,7 +709,7 @@ export function CollectionDetailSheet({
                         alt={`${meta.collection} Logo (${idx + 1}/${
                           metadata.length
                         })`}
-                        className='size-16 rounded-xl border-2 border-white shadow-lg'
+                        className='border-2 border-white shadow-lg size-16 rounded-xl'
                       />
                     </motion.div>
                   </div>

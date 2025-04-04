@@ -213,7 +213,7 @@ export async function getNFTCollectionMetadata(contractAddress: string) {
 export async function getNFTCollectionAnalytics(contractAddress: string) {
   return withTryCatch(async () => {
     const data = await ApiClient<NFTCollectionAnalytics>(
-      `nft/collection/analytics?contract_address=${contractAddress}&sort_by=sales&time_range=all`
+      `nft/collection/analytics?contract_address=${contractAddress}&sort_by=sales`
     )
     const collection = data.data
     return collection
@@ -251,7 +251,7 @@ export async function getNFTCollectionScores(
 ) {
   return withTryCatch(async () => {
     const data = await ApiClient<NFTCollectionScores>(
-      `nft/collection/scores?blockchain=${blockchain}&contract_address=${contractAddress}&sort_by=market_cap&time_range=all`
+      `nft/collection/scores?blockchain=${blockchain}&contract_address=${contractAddress}&sort_by=marketcap&time_range=all`
     )
     const collection = data.data
     return collection
