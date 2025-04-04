@@ -52,7 +52,7 @@ export function NFTSearchCard(props: NFTCardProps) {
               <img
                 src={props.thumbnail_url || '/placeholder.svg'}
                 alt={`${props.collection_name} #${props.token_id}`}
-                className='w-full h-48 object-cover'
+                className='object-cover w-full h-48'
               />
               <Badge
                 className='absolute top-2 right-2'
@@ -64,7 +64,7 @@ export function NFTSearchCard(props: NFTCardProps) {
             <div className='p-4 space-y-2'>
               <h3 className='font-bold truncate'>{props.collection_name}</h3>
               <p className='text-sm text-muted-foreground'>#{props.token_id}</p>
-              <div className='flex justify-between items-center'>
+              <div className='flex items-center justify-between'>
                 <span className='flex items-center'>
                   <DollarSign className='w-4 h-4 mr-1' />
                   {props.listed_eth_price.toFixed(3)} ETH
