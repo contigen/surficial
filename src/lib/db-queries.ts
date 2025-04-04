@@ -62,10 +62,7 @@ export async function updateNFTCollectionData(
       where: { address },
     })
 
-    if (existingCollection) {
-      console.log(`NFT Collection with address ${address} already exists.`)
-      return existingCollection // Return existing entry
-    }
+    if (existingCollection) return existingCollection
 
     return await prisma.nFTCollection.create({
       data: { name, address, walletId },

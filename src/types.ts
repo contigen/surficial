@@ -279,19 +279,19 @@ export type NFTCollectionHolders = {
 export type NFTCollectionScores = {
   data:
     | {
-        avg_usd_trend: string // Stored as a JSON string (e.g., "[0,0,0...]")
-        block_dates: string[] // Array of date strings in ISO 8601 format "'2024-06-07 00:00:00'",
-        blockchain: string // Name of the blockchain (e.g., "ethereum")
-        contract_address: string // Smart contract address
-        market_cap: string // Market capitalisation in string format
-        marketcap_change: string // Change in market capitalisation
-        marketcap_trend: string // Stored as a JSON string (e.g., "[0,0,0...]")
-        minting_revenue: number // Minting revenue as a number
-        price_avg: string // Average price in string format
-        price_avg_change: string // Change in average price in string format
-        price_ceiling: number // Price ceiling as a number
-        price_ceiling_trend: string // Stored as a JSON string (e.g., "[0,0,3.3147228237,0,0,0")
-        royalty_price: string // Royalty price in string format
+        avg_usd_trend: string
+        block_dates: string[]
+        blockchain: string
+        contract_address: string
+        market_cap: string
+        marketcap_change: string
+        marketcap_trend: string
+        minting_revenue: number
+        price_avg: string
+        price_avg_change: string
+        price_ceiling: number
+        price_ceiling_trend: string
+        royalty_price: string
       }[]
     | null
 } & Pagination
