@@ -4,19 +4,24 @@ import { DashboardView } from './dashboard-view'
 import { Suspense } from 'react'
 import { Spinner } from '&/components/ui/spinner'
 import { auth } from '&/auth'
+import { unstable_cache } from 'next/cache'
 
 export default async function DashboardPage() {
   const userId = (await auth())?.user.id
   if (!userId) redirect('/auth')
-  const nftStats = getNFTStats(userId)
-  const nftAnalysis = getNFTAnalysis(userId)
+  const nftStats = unstable_cache(() => getNFTStats(userId), [userId], {
+    tags: ['nft-stats'],
+  })()
+  const nftAnalysis = unstable_cache(() => getNFTAnalysis(userId), [userId], {
+    tags: ['nft-analysis'],
+  })()
   return (
     <div className='flex-col md:flex'>
       <div className='flex-1 p-8 pt-6 spaxce-y-4'>
         <div>
-          <h2 className='text-3xl font-bold tracking-tight sublime-text'>
+          <h1 className='text-3xl font-bold tracking-tight sublime-text'>
             Dashboard
-          </h2>
+          </h1>
         </div>
         <Suspense
           fallback={

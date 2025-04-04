@@ -48,6 +48,7 @@ import {
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { cosineSimilarity } from './lib/utils'
 import { index, pc, rateLimit, seedVectorDatabase } from './lib/semantic-search'
+import { revalidateTag } from 'next/cache'
 
 export type RegisterActionState = {
   message:
@@ -139,7 +140,15 @@ export async function updateNFTDataAction(
   const address = formData.get('address')?.toString()
   const walletId = formData.get('wallet_id')?.toString()
   if (!chain || !tokenId || !address || !walletId) return
-  return await updateNFTData(chain, tokenId, address, verified, walletId)
+  const nftData = await updateNFTData(
+    chain,
+    tokenId,
+    address,
+    verified,
+    walletId
+  )
+  revalidateTag(`nft-stats`)
+  return nftData
 }
 
 export async function updateNFTCollectionDataAction(formData: FormData) {
@@ -147,7 +156,13 @@ export async function updateNFTCollectionDataAction(formData: FormData) {
   const address = formData.get('address')?.toString()
   const walletId = formData.get('wallet_id')?.toString()
   if (!name || !address || !walletId) return
-  return await updateNFTCollectionData(name, address, walletId)
+  const nftCollectionData = await updateNFTCollectionData(
+    name,
+    address,
+    walletId
+  )
+  revalidateTag(`nft-stats`)
+  return nftCollectionData
 }
 
 export async function updateNFTAnalysisAction(
@@ -159,7 +174,15 @@ export async function updateNFTAnalysisAction(
   const collection = formData.get('collection')?.toString()
   const userId = formData.get('user_id')?.toString()
   if (!name || !imageURL || !collection || !userId) return
-  return await updateNFTAnalysis(name, imageURL, collection, verified, userId)
+  const nftAnalysis = await updateNFTAnalysis(
+    name,
+    imageURL,
+    collection,
+    verified,
+    userId
+  )
+  revalidateTag(`nft-analysis`)
+  return nftAnalysis
 }
 
 export async function getSimilarImage(formData: FormData) {
