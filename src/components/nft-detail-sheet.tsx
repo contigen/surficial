@@ -74,9 +74,9 @@ export function NFTDetailSheet({
     return (
       <span className={value >= 0 ? 'text-green-500' : 'text-red-500'}>
         {value >= 0 ? (
-          <ArrowUpRight className='inline mr-1 h-4 w-4' />
+          <ArrowUpRight className='inline w-4 h-4 mr-1' />
         ) : (
-          <ArrowDownRight className='inline mr-1 h-4 w-4' />
+          <ArrowDownRight className='inline w-4 h-4 mr-1' />
         )}
         {formattedValue}%
       </span>
@@ -86,9 +86,9 @@ export function NFTDetailSheet({
   const renderSocialMediaLinks = () => {
     return data.metadata.social_media
       .filter(social => social.url !== 'NA')
-      .map(social => (
+      .map((social, idx) => (
         <a
-          key={social.platform}
+          key={idx}
           href={social.url}
           target='_blank'
           rel='noopener noreferrer'
@@ -191,7 +191,7 @@ export function NFTDetailSheet({
           <Card>
             <CardHeader>
               <CardTitle className='flex items-center gap-2'>
-                <Clock className='h-4 w-4' />
+                <Clock className='w-4 h-4' />
                 Minted
               </CardTitle>
             </CardHeader>
@@ -204,7 +204,7 @@ export function NFTDetailSheet({
           <Card>
             <CardHeader>
               <CardTitle className='flex items-center gap-2'>
-                <Eye className='h-4 w-4' />
+                <Eye className='w-4 h-4' />
                 Rarity
               </CardTitle>
             </CardHeader>
@@ -215,7 +215,7 @@ export function NFTDetailSheet({
         <Card>
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
-              <Shield className='h-4 w-4' />
+              <Shield className='w-4 h-4' />
               Ownership
             </CardTitle>
           </CardHeader>
@@ -258,7 +258,7 @@ export function NFTDetailSheet({
         <Card>
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
-              <CreditCard className='h-4 w-4' />
+              <CreditCard className='w-4 h-4' />
               Price Information
             </CardTitle>
           </CardHeader>
@@ -333,7 +333,7 @@ export function NFTDetailSheet({
         <Card>
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
-              <BarChart3 className='h-4 w-4' />
+              <BarChart3 className='w-4 h-4' />
               Trading Activity
             </CardTitle>
           </CardHeader>
@@ -341,7 +341,7 @@ export function NFTDetailSheet({
             {data.analytics?.map(analytic => (
               <div
                 key={crypto.randomUUID()}
-                className='border-b pb-2 last:border-b-0'
+                className='pb-2 border-b last:border-b-0'
               >
                 <div className='flex items-center justify-between'>
                   <span className='text-sm text-muted-foreground'>
@@ -409,7 +409,7 @@ export function NFTDetailSheet({
         <Card>
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
-              <Users className='h-4 w-4' />
+              <Users className='w-4 h-4' />
               Trader Information
             </CardTitle>
           </CardHeader>
@@ -417,7 +417,7 @@ export function NFTDetailSheet({
             {data.traders?.map(trader => (
               <div
                 key={crypto.randomUUID()}
-                className='border-b pb-2 last:border-b-0'
+                className='pb-2 border-b last:border-b-0'
               >
                 <div className='flex items-center justify-between'>
                   <span className='text-sm text-muted-foreground'>
@@ -453,7 +453,7 @@ export function NFTDetailSheet({
         <Card>
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
-              <TrendingUp className='h-4 w-4' />
+              <TrendingUp className='w-4 h-4' />
               Price History
             </CardTitle>
           </CardHeader>
@@ -482,7 +482,7 @@ export function NFTDetailSheet({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.transactions?.map((transaction: any, index: number) => (
+                {data.transactions?.map((transaction, index) => (
                   <TableRow key={index}>
                     <TableCell>
                       {transaction.transaction_type || 'N/A'}
@@ -530,13 +530,13 @@ export function NFTDetailSheet({
       <Card>
         <CardHeader>
           <CardTitle className='flex items-center gap-2'>
-            <Info className='h-4 w-4' />
+            <Info className='w-4 h-4' />
             Traits
           </CardTitle>
         </CardHeader>
         <CardContent className='grid grid-cols-2 gap-4'>
           {data.traits?.traits?.map((trait, index) => (
-            <div key={index} className='bg-muted rounded-lg p-3 space-y-1'>
+            <div key={index} className='p-3 space-y-1 rounded-lg bg-muted'>
               <p className='text-sm font-medium'>{trait.trait_type}</p>
               <p className='text-sm text-muted-foreground'>{trait.value}</p>
             </div>
@@ -564,7 +564,7 @@ export function NFTDetailSheet({
 
   return (
     <Drawer open={!!data} onOpenChange={onClose}>
-      <DrawerContent className='overflow-hidden p-0'>
+      <DrawerContent className='p-0 overflow-hidden'>
         <ScrollArea className='overflow-y-auto'>
           <div className='flex flex-col h-full'>
             <div
@@ -577,7 +577,7 @@ export function NFTDetailSheet({
                 <motion.img
                   src={data.metadata.token_image_url}
                   alt={data.metadata.name}
-                  className='max-h-full max-w-full object-contain shadow-2xl rounded-2xl'
+                  className='object-contain max-w-full max-h-full shadow-2xl rounded-2xl'
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 0.5 }}
@@ -592,12 +592,12 @@ export function NFTDetailSheet({
                     {data.metadata.name}
                   </DrawerTitle>
                   {data.metadata.verified ? (
-                    <Verified className='h-6 w-6 text-blue-500' />
+                    <Verified className='text-blue-500 size-6' />
                   ) : (
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger>
-                          <BadgeInfo className='h-6 w-6 text-red-500' />
+                          <BadgeInfo className='text-red-500 size-6' />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>Unverified NFT</p>

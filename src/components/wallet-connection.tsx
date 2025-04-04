@@ -50,7 +50,7 @@ export function WalletConnection() {
           <Spinner />
         ) : (
           <>
-            <Wallet className='mr-2 h-4 w-4' />
+            <Wallet className='w-4 h-4 mr-2' />
             Connect Wallet
           </>
         )}
@@ -72,7 +72,7 @@ export function WalletConnection() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant='outline'>
-          <Wallet className='mr-2 h-4 w-4' />
+          <Wallet className='w-4 h-4 mr-2' />
           {address.slice(0, 6)}...{address.slice(-4)}
         </Button>
       </DropdownMenuTrigger>
@@ -80,16 +80,15 @@ export function WalletConnection() {
         <DropdownMenuLabel>Wallet Connected</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={copyAddress}>
-          <Copy className='mr-2 h-4 w-4' />
+          <Copy className='w-4 h-4 mr-2' />
           Copy Address
         </DropdownMenuItem>
         <DropdownMenuItem onClick={viewOnExplorer}>
-          <ExternalLink className='mr-2 h-4 w-4' />
+          <ExternalLink className='w-4 h-4 mr-2' />
           View on Explorer
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Balance: {balance}</DropdownMenuItem>
-        <DropdownMenuSeparator />
       </DropdownMenuContent>
     </DropdownMenu>
   )

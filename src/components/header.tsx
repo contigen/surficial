@@ -6,10 +6,10 @@ import Link from 'next/link'
 export function Header() {
   return (
     <header className='sticky top-0 z-30 w-full border-b bg-background/80 backdrop-blur-sm'>
-      <div className='container flex h-16 items-center'>
-        <div className='mr-4 hidden md:flex'>
-          <Link href='/' className='mr-6 flex items-center space-x-2'>
-            <span className='hidden font-bold sm:inline-block text-xl sublime-text'>
+      <div className='container flex items-center h-16'>
+        <div className='hidden mr-4 md:flex'>
+          <Link href='/' className='flex items-center mr-6 space-x-2'>
+            <span className='hidden text-xl font-bold sm:inline-block sublime-text'>
               Surficial
             </span>
           </Link>
@@ -40,7 +40,7 @@ export function Header() {
             </Link>
           </nav>
         </div>
-        <div className='flex flex-1 items-center justify-end space-x-4'>
+        <div className='flex items-center justify-end flex-1 space-x-4'>
           <nav className='flex items-center space-x-2'>
             <WalletConnection />
             <ModeToggle />
