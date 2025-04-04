@@ -12,13 +12,17 @@ export default async function DashboardPage() {
   const nftAnalysis = getNFTAnalysis(userId)
   return (
     <div className='flex-col md:flex'>
-      <div className='flex-1 p-8 pt-6 space-y-4'>
+      <div className='flex-1 p-8 pt-6 spaxce-y-4'>
         <div>
           <h2 className='text-3xl font-bold tracking-tight sublime-text'>
             Dashboard
           </h2>
         </div>
-        <Suspense fallback={<div>{<Spinner strokeColor='#fff' />}</div>}>
+        <Suspense
+          fallback={
+            <div className='my-2'>{<Spinner strokeColor='#A1A1AA' />}</div>
+          }
+        >
           <DashboardView {...{ nftStats, nftAnalysis }} />
         </Suspense>
       </div>
