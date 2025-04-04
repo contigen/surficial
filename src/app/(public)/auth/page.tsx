@@ -13,8 +13,8 @@ import { SignInForm } from './sign-in'
 
 export default function AuthPage() {
   return (
-    <div className='container flex justify-center items-center py-10 mx-auto h-[calc(100vh-30px)]'>
-      <Card className='w-full max-w-md glass-effect'>
+    <div className='flex justify-center items-center h-[calc(100vh-30px)]'>
+      <Card className='w-full max-w-md'>
         <CardHeader>
           <CardTitle className='text-2xl text-center '>
             Welcome to{' '}

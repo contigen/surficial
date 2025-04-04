@@ -19,7 +19,7 @@ import { UserStats } from './user-stats'
 import { BlockchainData } from './blockchain-data'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Copy, User, Wallet, BarChart3, History, Share2 } from 'lucide-react'
-import { toast } from '&/hooks/use-toast'
+import { toast } from 'sonner'
 import { formatDistanceToNow } from 'date-fns'
 
 type UserProfileDialogProps = {
@@ -47,8 +47,7 @@ export function UserProfileDialog({
   const copyAddress = () => {
     if (userData) {
       navigator.clipboard.writeText(userData.address)
-      toast({
-        title: 'Address copied',
+      toast('Address copied', {
         description: 'Wallet address copied to clipboard',
       })
     }

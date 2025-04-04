@@ -7,7 +7,7 @@ import { Mic, MicOff, Search } from 'lucide-react'
 import { useCombobox } from 'downshift'
 import { Card, CardContent } from '&/components/ui/card'
 import { useSpeechRecognition } from '&/hooks/speech-recognition/use-speech-recognition'
-import { toast } from '&/hooks/use-toast'
+import { toast } from 'sonner'
 import { processNFTQueryWithEmbeddings } from '&/actions'
 import { Spinner } from './ui/spinner'
 import { NFTTopDealItem } from '&/types'
@@ -34,17 +34,25 @@ export function NaturalLanguageSearch({
   const [pending, setIsPending] = useState(false)
   const [error, setError] = useState(false)
   const {
+    Recognition,
+    startSpeechRec,
+    stopSpeechRec,
+    transcript: { preview, note },
+  } = useSpeechRecognition()
+  const {
     isOpen,
     getMenuProps,
     getInputProps,
     getItemProps,
     highlightedIndex,
     selectedItem,
+    setInputValue: setComboboxInputValue,
   } = useCombobox({
     items,
     onInputValueChange: ({ inputValue }) => {
       setError(false)
       setInputValue(inputValue || '')
+      setComboboxInputValue(inputValue || '')
       setItems(
         suggestions.filter(item =>
           item.toLowerCase().includes(inputValue?.toLowerCase() || '')
@@ -52,18 +60,11 @@ export function NaturalLanguageSearch({
       )
     },
   })
-  const {
-    Recognition,
-    startSpeechRec,
-    stopSpeechRec,
-    transcript: { preview, note },
-  } = useSpeechRecognition()
+
   function handleSpeechRec() {
     if (!Recognition) {
-      toast({
-        title: `Speech Recognition Unavailable`,
+      toast.info(`Speech Recognition Unavailable`, {
         description: `Your browser doesn't support speech recognition. Please try using a different browser or input your message manually.`,
-        variant: `destructive`,
       })
       return
     }
@@ -86,13 +87,13 @@ export function NaturalLanguageSearch({
       return
     }
     setIsPending(false)
-    setSearchResults(nftdata)
+    setSearchResults(nftdata as NFTTopDealItem)
   }
 
   useEffect(() => {
-    if (note) {
-      setInputValue(note)
-    } else setInputValue(preview)
+    console.log('Speech Preview:', preview)
+    setInputValue(note || preview || '')
+    setComboboxInputValue(note || preview || '')
   }, [note, preview])
 
   return (
@@ -119,7 +120,11 @@ export function NaturalLanguageSearch({
             )}
           </Button>
           <Button size='icon' type='submit'>
-            {pending ? Spinner : <Search className='h-4 w-4' />}
+            {pending ? (
+              <Spinner strokeColor='#fff' />
+            ) : (
+              <Search className='h-4 w-4' />
+            )}
           </Button>
         </div>
       </form>

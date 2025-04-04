@@ -1,9 +1,9 @@
-import { auth } from '&/auth'
 import { getNFTAnalysis, getNFTStats } from '&/lib/db-queries'
 import { redirect } from 'next/navigation'
 import { DashboardView } from './dashboard-view'
 import { Suspense } from 'react'
 import { Spinner } from '&/components/ui/spinner'
+import { auth } from '&/auth'
 
 export default async function DashboardPage() {
   const userId = (await auth())?.user.id
@@ -12,13 +12,13 @@ export default async function DashboardPage() {
   const nftAnalysis = getNFTAnalysis(userId)
   return (
     <div className='flex-col md:flex'>
-      <div className='flex-1 space-y-4 p-8 pt-6'>
+      <div className='flex-1 p-8 pt-6 space-y-4'>
         <div>
           <h2 className='text-3xl font-bold tracking-tight sublime-text'>
             Dashboard
           </h2>
         </div>
-        <Suspense fallback={<div>{Spinner}</div>}>
+        <Suspense fallback={<div>{<Spinner strokeColor='#fff' />}</div>}>
           <DashboardView {...{ nftStats, nftAnalysis }} />
         </Suspense>
       </div>

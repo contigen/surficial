@@ -18,7 +18,7 @@ import {
   updateNFTDataAction,
 } from '&/actions'
 import { EmptyState } from './empty-state'
-import { toast } from '&/hooks/use-toast'
+import { toast } from 'sonner'
 import { analysisResultAtom } from '&/lib/atoms'
 import { useSetAtom } from 'jotai'
 import { useRouter } from 'next/navigation'
@@ -43,10 +43,7 @@ export function NFTSearch() {
     const address = formData.get('contractAddress')?.toString()
     const tokenID = formData.get('tokenId')?.toString()
     if (!address || !tokenID) {
-      toast({
-        title: 'Invalid Form Data',
-        variant: 'destructive',
-      })
+      toast.warning('Invalid Form Data')
       return
     }
     const nfts = await getNFTMetadata(
@@ -78,8 +75,7 @@ export function NFTSearch() {
 
     setIsSearching(false)
     setAnalysisResultAtom({ type: `nft`, data: [nfts] })
-    toast({
-      title: 'Analysis Complete',
+    toast.success('Analysis Complete', {
       description: `NFT Search completed successfully.`,
     })
     router.push('/explore')
@@ -134,7 +130,7 @@ export function NFTSearch() {
               />
             </div>
             <Button type='submit' className='w-full'>
-              {isSearching ? Spinner : 'Search NFT'}
+              {isSearching ? <Spinner /> : 'Search NFT'}
             </Button>
           </fieldset>
         </form>

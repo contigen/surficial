@@ -9,6 +9,7 @@ import { EmptyNFTCard } from '&/components/empty-nft-card'
 import { use, useState } from 'react'
 import { NFTData } from '&/types'
 import { mockNFTs } from '&/lib/mock-data'
+import { useSession } from 'next-auth/react'
 
 export function DashboardView({
   nftStats,
@@ -41,6 +42,7 @@ export function DashboardView({
 
   const resolvedNFTStats = use(nftStats)
   const resolvedNFTAnalysis = use(nftAnalysis)
+  const { data: session } = useSession()
   return (
     <>
       <Tabs defaultValue='overview' className='space-y-4'>

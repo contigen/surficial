@@ -20,6 +20,7 @@ export function WalletConnection() {
   const [isConnecting, setIsConnecting] = useState(false)
   const [balance, setBalance] = useState('')
   const { data: session, update } = useSession()
+  const [_walletAddress, setWalletAddress] = useState('')
   const walletAddress = session?.user.walletAddress
 
   useEffect(() => {
@@ -35,6 +36,7 @@ export function WalletConnection() {
     setIsConnecting(false)
     if (result) {
       const { address } = result
+      setWalletAddress(address)
       update({ walletAddress: address })
     } else {
       toast.error('Failed to connect wallet!')
@@ -45,7 +47,7 @@ export function WalletConnection() {
     return (
       <Button onClick={handleConnect}>
         {isConnecting ? (
-          Spinner
+          <Spinner />
         ) : (
           <>
             <Wallet className='mr-2 h-4 w-4' />
@@ -65,13 +67,13 @@ export function WalletConnection() {
   const viewOnExplorer = () => {
     window.open(`https://etherscan.io/address/${walletAddress}`, '_blank')
   }
-
+  const address = walletAddress || _walletAddress
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant='outline'>
           <Wallet className='mr-2 h-4 w-4' />
-          {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+          {address.slice(0, 6)}...{address.slice(-4)}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>

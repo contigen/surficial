@@ -22,9 +22,7 @@ export function SignInForm() {
     if (state.message === `invalid data`) {
       toast.error(`Invalid form data`)
     } else if (state.message === `user logged_in`) {
-      toast.success(`You are logged in`, {
-        richColors: true,
-      })
+      toast.success(`You are logged in`)
       router.refresh()
     } else if (state.message === `failed to login user`) {
       toast.error(`Failed to log in`)
@@ -39,9 +37,11 @@ export function SignInForm() {
     }
   }, [params, router])
   return (
-    <form className='space-y-4 mt-2' action={formAction}>
-      <InputForm />
-      <Button className='w-full'>{pending ? Spinner : 'Sign Up'}</Button>
+    <form className='mt-3' action={formAction}>
+      <fieldset className='space-y-4' disabled={pending}>
+        <InputForm />
+        <Button className='w-full'>{pending ? <Spinner /> : 'Sign Up'}</Button>
+      </fieldset>
     </form>
   )
 }

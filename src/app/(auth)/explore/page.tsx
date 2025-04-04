@@ -11,6 +11,7 @@ import { analysisResultAtom, dataImageAtom } from '&/lib/atoms'
 import { UserProfileDialog } from '&/components/user-profile-dialog'
 import { NFTCollectionData, NFTData } from '&/types'
 import { EmptyState } from '&/components/empty-state'
+import { useSession } from 'next-auth/react'
 
 export default function Page() {
   const [selectedNFT, setSelectedNFT] = useState<NFTData | null>(null)
@@ -20,6 +21,7 @@ export default function Page() {
   const analysisResult = useAtomValue(analysisResultAtom)
   const dataImage = useAtomValue(dataImageAtom)
   const [selectedUser, setSelectedUser] = useState<any>(null)
+  const { data: session } = useSession()
 
   useEffect(() => {
     if (analysisResult) {
@@ -47,7 +49,6 @@ export default function Page() {
   return (
     <main className='container mx-auto px-4 py-8 relative'>
       <h1 className='text-3xl font-bold mb-8'>Explore NFTs and Collections</h1>
-
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}

@@ -27,21 +27,21 @@ export function SignUpForm() {
     } else if (state.message === `User already exists`) {
       toast.info(`User already exists!`)
     } else if (state.message === `user created`) {
-      toast.success(`Your account has been created and you will be logged in`, {
-        richColors: true,
-      })
+      toast.success(`Your account has been created and you will be logged in`)
       router.refresh()
     } else if (state.message === `failed to create user`) {
       toast.error(`Failed to create account`)
     }
   }, [router, state])
   return (
-    <form className='space-y-4 mt-2' action={formAction}>
-      <Input placeholder='Name' name='name' required />
-      <InputForm />
-      <Button className='w-full' type='submit'>
-        {pending ? Spinner : 'Sign Up'}
-      </Button>
+    <form className='mt-3' action={formAction}>
+      <fieldset className='space-y-4' disabled={pending}>
+        <Input placeholder='Name' name='name' required />
+        <InputForm />
+        <Button className='w-full' type='submit'>
+          {pending ? <Spinner /> : 'Sign Up'}
+        </Button>
+      </fieldset>
     </form>
   )
 }

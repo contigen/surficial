@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from '&/components/ui/card'
 import { Label } from '&/components/ui/label'
-import { toast } from '&/hooks/use-toast'
+import { toast } from 'sonner'
 import { Spinner } from './ui/spinner'
 import { useRouter } from 'next/navigation'
 import { useSetAtom } from 'jotai'
@@ -42,9 +42,8 @@ export function CollectionAnalysis() {
       .toLowerCase() as Blockchain
     const address = formData.get('collection')?.toString()
     if (!address || !blockchain) {
-      toast({
-        title: 'Invalid Form Data',
-        variant: 'destructive',
+      toast.error('Invalid Form Data', {
+        description: 'Please enter valid blockchain and address',
       })
       return
     }
@@ -65,8 +64,8 @@ export function CollectionAnalysis() {
     await updateNFTCollectionDataAction(_formData)
     setIsAnalyzing(false)
     setAnalysisResultAtom({ type: `collection`, data: [collections] })
-    toast({
-      title: 'Analysis Complete',
+    toast.info('Analysis Complete', {
+      richColors: true,
       description: `NFT Collection analysis completed successfully.`,
     })
     router.push('/explore')
@@ -112,7 +111,7 @@ export function CollectionAnalysis() {
               />
             </div>
             <Button type='submit' className='w-full'>
-              {isAnalyzing ? Spinner : 'Analyze Collection'}
+              {isAnalyzing ? <Spinner /> : 'Analyze Collection'}
             </Button>
           </fieldset>
         </form>

@@ -11,13 +11,13 @@ import { Upload, X, Clipboard } from 'lucide-react'
 import Image from 'next/image'
 import { Spinner } from './ui/spinner'
 import { getSimilarImage, updateNFTDataAction } from '&/actions'
-import { useToast } from '&/hooks/use-toast'
 import { useRouter } from 'next/navigation'
 import { useSetAtom } from 'jotai'
 import { analysisResultAtom, dataImageAtom } from '&/lib/atoms'
 import { EmptyState } from './empty-state'
 import { useSession } from 'next-auth/react'
 import { getNetworkName } from '&/lib/utils'
+import { toast } from 'sonner'
 
 export function NFTUploader() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -28,7 +28,6 @@ export function NFTUploader() {
   const setDataImageAtom = useSetAtom(dataImageAtom)
   const setAnalysisResultAtom = useSetAtom(analysisResultAtom)
   const [error, setError] = useState<string | null>(null)
-  const { toast } = useToast()
   const router = useRouter()
   const { data: session } = useSession()
   const walletId = session?.user.walletId
@@ -42,10 +41,8 @@ export function NFTUploader() {
       reader.readAsDataURL(file)
       setFile(file)
     } else {
-      toast({
-        title: `Invalid File Type`,
+      toast.warning('Invalid File Type', {
         description: `Please upload a valid image file.`,
-        variant: `destructive`,
       })
     }
   }
@@ -63,10 +60,8 @@ export function NFTUploader() {
     if (file) {
       readFile(file)
     } else {
-      toast({
-        title: `No file detected`,
+      toast.info('No file detected', {
         description: `Please drop a valid image file.`,
-        variant: `destructive`,
       })
     }
   }
@@ -90,10 +85,8 @@ export function NFTUploader() {
   async function handlePaste() {
     try {
       if (!navigator.clipboard.read) {
-        toast({
-          title: `Clipboard API not supported`,
+        toast.error('Clipboard API not supported', {
           description: `Your browser doesn't support pasting images. Try dragging and dropping or uploading an image instead.`,
-          variant: `destructive`,
         })
         return
       }
@@ -108,16 +101,13 @@ export function NFTUploader() {
           }
         }
       }
-      toast({
-        title: `No image found`,
+      toast.warning('No image found', {
         description: `There's no image in your clipboard. Try copying an image first.`,
       })
     } catch (error) {
       console.error(error)
-      toast({
-        title: `Clipboard access error`,
+      toast.error('Clipboard access error', {
         description: `Could not access your clipboard. Ensure permissions are granted and try again.`,
-        variant: `destructive`,
       })
     }
   }
@@ -144,8 +134,7 @@ export function NFTUploader() {
 
     setDataImageAtom(previewUrl)
     setAnalysisResultAtom({ type: `nft`, data: nfts })
-    toast({
-      title: 'Analysis Complete',
+    toast.success('Analysis Complete', {
       description: `NFT analysis completed successfully.`,
     })
     router.push('/explore')
@@ -233,7 +222,7 @@ export function NFTUploader() {
           onClick={handleAnalyze}
           disabled={!previewUrl || isAnalyzing}
         >
-          {isAnalyzing ? Spinner : `Start Analysis`}
+          {isAnalyzing ? <Spinner /> : `Start Analysis`}
         </Button>
       </CardContent>
     </Card>

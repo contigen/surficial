@@ -1,12 +1,7 @@
 'use server'
 
 import { ZodError } from 'zod'
-import {
-  ColorDescriptionSchema,
-  loginSchema,
-  NFTVisualDescription,
-  registerSchema,
-} from './lib/schema'
+import { loginSchema, registerSchema } from './lib/schema'
 import {
   createUser,
   getUser,
@@ -15,7 +10,7 @@ import {
   updateNFTData,
 } from './lib/db-queries'
 import { signIn } from './auth'
-import { ApiClient } from './api/client'
+import { ApiClient } from '&/app/api/client'
 import {
   Blockchain,
   DataNotFound,
@@ -52,7 +47,7 @@ import {
 } from './lib/utils'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { cosineSimilarity } from './lib/utils'
-import { index, pc, rateLimit } from './lib/semantic-search'
+import { index, pc, rateLimit, seedVectorDatabase } from './lib/semantic-search'
 
 export type RegisterActionState = {
   message:
@@ -120,6 +115,7 @@ export async function loginUser(
     await signIn(`credentials`, {
       email: validatedFormData.email,
       password: validatedFormData.password,
+      redirect: false,
     })
     return {
       message: `user logged_in`,
@@ -390,7 +386,7 @@ export async function getNFTAnalytics(
 export async function getNFTTopDeals() {
   return withTryCatch(async () => {
     const data = await ApiClient<NFTTopDeals>(
-      `nft/top_deals?sort_by=deal_score&sort_order=desc&offset=0&limit=18`
+      `nft/top_deals?sort_by=deal_score&sort_order=desc&offset=60&limit=80`
     )
     const collection = data.data
     return collection
@@ -595,4 +591,15 @@ export async function processNFTQueryWithEmbeddings(
     .map(({ nft }) => nft)
 
   return sortedResults ?? null
+}
+
+export async function seedDatabaseAction() {
+  console.log('seed db action')
+  try {
+    const result = await seedVectorDatabase()
+    return { success: true, data: result }
+  } catch (error) {
+    console.error('Error seeding database:', error)
+    return { success: false, error: (error as Error).message }
+  }
 }

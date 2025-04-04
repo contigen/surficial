@@ -61,9 +61,9 @@ export function NFTGridView({
             : 'flex flex-col gap-4'
         )}
       >
-        {nfts.map(nft => (
+        {nfts.map((nft, idx) => (
           <NFTCard
-            key={nft.metadata.token_id}
+            key={nft.metadata.token_id + idx}
             nft={nft}
             viewMode={viewMode}
             onClick={() => onOpenDetails(nft)}

@@ -10,7 +10,7 @@ export default function AuthLayout({
   return (
     <SessionProvider>
       <Provider>
-        <div>
+        <div suppressHydrationWarning>
           <Header />
           <main>{children}</main>
         </div>

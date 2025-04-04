@@ -8,6 +8,7 @@ import type { JWT } from 'next-auth/jwt'
 
 declare module 'next-auth/jwt' {
   interface JWT {
+    id?: string
     walletId?: string
     walletAddress?: string
   }
@@ -31,14 +32,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         const { email, password } = await loginSchema.parseAsync(credentials)
-
         try {
           const user = await getUser(email)
           if (!user) return null
           const isSamePassword = await compare(password, user.password!)
           if (!isSamePassword) return null
-          const { id, name, email: userEmail } = user
-          return { id, name, email: userEmail }
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+          }
         } catch {
           return null
         }
@@ -51,36 +54,51 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const { pathname } = req.nextUrl
       const isLoggedIn = !!auth?.user
       const isAPublicRoute = PUBLIC_ROUTES.some(route => route === pathname)
-      if (isAPublicRoute) {
+      if (isLoggedIn && pathname.startsWith('/api/auth')) {
         return true
       }
-      if (!isLoggedIn) return false
+      if (
+        isLoggedIn &&
+        !auth?.user.walletAddress &&
+        pathname !== `/connect-wallet`
+      ) {
+        return NextResponse.redirect(new URL(`/connect-wallet`, req.url))
+      }
       if (isLoggedIn && isAPublicRoute) {
         return NextResponse.redirect(new URL(`/dashboard`, req.url))
       }
-      return true
+      if (isAPublicRoute) {
+        return true
+      }
+      return isLoggedIn
     },
-
     async jwt({ token, user, trigger, session }) {
-      const userID = user.id
       if (user) {
-        return { ...token, ...user }
+        token = { ...token, ...user }
       }
       if (trigger === `update` && session) {
-        console.log(session.walletAddress)
-        const wallet = await addWalletToUser(userID!, session.walletAddress)
-        return {
+        const wallet = await addWalletToUser(
+          token.id as string,
+          session.user.walletAddress
+        )
+        token = {
           ...token,
-          walletAddress: session?.walletAddress,
+          walletAddress: wallet?.address,
           walletId: wallet?.id,
         }
       }
-
       return token
     },
     async session({ session, token }) {
-      session.user.id = token.id as string
-      return session
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id,
+          walletId: token.walletId,
+          walletAddress: token.walletAddress,
+        },
+      }
     },
   },
   pages: {
