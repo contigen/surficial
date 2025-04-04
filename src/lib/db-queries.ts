@@ -28,7 +28,10 @@ export function createUser({ name, email, password }: CreateUser) {
 
 export function getUser(email: string) {
   return withTryCatch(() => {
-    return prisma.user.findUnique({ where: { email } })
+    return prisma.user.findUnique({
+      where: { email },
+      include: { wallets: true },
+    })
   })
 }
 

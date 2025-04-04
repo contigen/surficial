@@ -37,10 +37,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           if (!user) return null
           const isSamePassword = await compare(password, user.password!)
           if (!isSamePassword) return null
+          const wallet = user.wallets.at(-1)
           return {
             id: user.id,
             name: user.name,
             email: user.email,
+            walletAddress: wallet?.address,
+            walletId: wallet?.id,
           }
         } catch {
           return null
