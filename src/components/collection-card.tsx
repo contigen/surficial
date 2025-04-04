@@ -3,7 +3,7 @@
 import { Badge } from '&/components/ui/badge'
 import { Card, CardContent } from '&/components/ui/card'
 import { motion } from 'framer-motion'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow, isValid } from 'date-fns'
 import { Zap, BarChart2, Users } from 'lucide-react'
 import { cn, parseCloseColours } from '&/lib/utils'
 import type { NFTCollectionData } from '&/types'
@@ -58,14 +58,14 @@ export function CollectionCard({
             <img
               src={metadata.banner_image_url || '/placeholder.svg'}
               alt={metadata.collection}
-              className='h-full w-full object-cover transition-transform duration-300 group-hover:scale-110'
+              className='object-cover w-full h-full transition-transform duration-300 group-hover:scale-110'
             />
           </div>
 
           <div
             className={cn('space-y-2', viewMode === 'grid' ? 'p-4' : 'flex-1')}
           >
-            <h3 className='font-bold tracking-tight text-lg'>
+            <h3 className='text-lg font-bold tracking-tight'>
               {metadata?.collection}
             </h3>
 
@@ -75,26 +75,31 @@ export function CollectionCard({
               <Badge variant='secondary'>{metadata?.blockchain}</Badge>
               <Badge variant='outline'>{metadata?.contract_type}</Badge>
             </div>
-            <div className='flex justify-between items-center text-sm'>
+            <div className='flex items-center justify-between text-sm'>
               <span className='flex items-center gap-1'>
-                <Zap className='h-4 w-4' />
-                {analytics?.sales.toLocaleString() || 'Unknown'} sales
+                <Zap className='w-4 h-4' />
+                {analytics?.sales?.toLocaleString() || 'Unknown'} sales
               </span>
               <span className='flex items-center gap-1'>
-                <BarChart2 className='h-4 w-4' />$
+                <BarChart2 className='w-4 h-4' />$
                 {analytics?.volume.toLocaleString() || 0}
               </span>
             </div>
-            <div className='flex justify-between items-center text-sm'>
+            <div className='flex items-center justify-between text-sm'>
               <span className='flex items-center gap-1'>
-                <Users className='h-4 w-4' />
+                <Users className='w-4 h-4' />
                 {holders?.holders || 'Unknown'} holders
               </span>
               <span className='text-xs text-muted-foreground'>
                 Created{' '}
-                {formatDistanceToNow(new Date(metadata.contract_created_date), {
-                  addSuffix: true,
-                })}
+                {isValid(metadata.contract_created_date)
+                  ? formatDistanceToNow(
+                      new Date(metadata.contract_created_date),
+                      {
+                        addSuffix: true,
+                      }
+                    )
+                  : `Unknown`}
               </span>
             </div>
           </div>
