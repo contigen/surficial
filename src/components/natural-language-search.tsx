@@ -33,12 +33,14 @@ export function NaturalLanguageSearch({
   const [isListening, setIsListening] = useState(false)
   const [pending, setIsPending] = useState(false)
   const [error, setError] = useState(false)
+
   const {
     Recognition,
     startSpeechRec,
     stopSpeechRec,
     transcript: { preview, note },
   } = useSpeechRecognition()
+
   const {
     isOpen,
     getMenuProps,
@@ -49,10 +51,10 @@ export function NaturalLanguageSearch({
     setInputValue: setComboboxInputValue,
   } = useCombobox({
     items,
+    inputValue,
     onInputValueChange: ({ inputValue }) => {
       setError(false)
       setInputValue(inputValue || '')
-      setComboboxInputValue(inputValue || '')
       setItems(
         suggestions.filter(item =>
           item.toLowerCase().includes(inputValue?.toLowerCase() || '')
@@ -68,12 +70,14 @@ export function NaturalLanguageSearch({
       })
       return
     }
-    setIsListening(prev => !prev)
+
     if (isListening) {
       stopSpeechRec()
     } else {
       startSpeechRec()
     }
+
+    setIsListening(prev => !prev)
   }
 
   const handleSearch = async (evt: FormEvent) => {
@@ -84,6 +88,7 @@ export function NaturalLanguageSearch({
     const nftdata = await processNFTQueryWithEmbeddings({}, formData)
     if (!nftdata) {
       setError(true)
+      setIsPending(false)
       return
     }
     setIsPending(false)
@@ -91,16 +96,23 @@ export function NaturalLanguageSearch({
   }
 
   useEffect(() => {
-    console.log('Speech Preview:', preview)
-    setInputValue(note || preview || '')
-    setComboboxInputValue(note || preview || '')
-  }, [note, preview])
+    if (preview || note) {
+      const newValue = note || preview || ''
+      setInputValue(newValue)
+      setComboboxInputValue(newValue)
+    }
+  }, [note, preview, setComboboxInputValue])
 
   return (
     <div className='relative w-full max-w-2xl mx-auto mb-20'>
       <form className='flex items-center' onSubmit={handleSearch}>
         <Input
           {...getInputProps()}
+          value={inputValue}
+          onChange={e => {
+            setInputValue(e.target.value)
+            setComboboxInputValue(e.target.value)
+          }}
           placeholder='Search for NFTs, collections, or traits...'
           required
           className='pr-20 shadow-lg'
@@ -110,26 +122,27 @@ export function NaturalLanguageSearch({
           <Button
             size='icon'
             variant='ghost'
+            type='button'
             onClick={handleSpeechRec}
             className={isListening ? 'text-primary' : ''}
           >
             {isListening ? (
-              <Mic className='h-4 w-4' />
+              <Mic className='w-4 h-4' />
             ) : (
-              <MicOff className='h-4 w-4' />
+              <MicOff className='w-4 h-4' />
             )}
           </Button>
           <Button size='icon' type='submit'>
             {pending ? (
               <Spinner strokeColor='#fff' />
             ) : (
-              <Search className='h-4 w-4' />
+              <Search className='w-4 h-4' />
             )}
           </Button>
         </div>
       </form>
       {error && (
-        <h3 className='ml-16 font-semibold text-xl tracking-tight my-8'>
+        <h3 className='my-8 ml-16 text-xl font-semibold tracking-tight'>
           No related NFT data found. Try again with another input.
         </h3>
       )}
@@ -139,7 +152,7 @@ export function NaturalLanguageSearch({
           isOpen ? '' : 'hidden'
         }`}
       >
-        <CardContent className='p-0 rounded-lg overflow-hidden'>
+        <CardContent className='p-0 overflow-hidden rounded-lg'>
           {isOpen &&
             items.map((item, index) => (
               <div
