@@ -1,4 +1,4 @@
-# Surfiicial
+# Surficial
 
 An AI-Powered NFT Forensics Platform to help users verify NFT authenticity, detect duplicates, and assess metadata anomalies with ease. it affords users the ability to find NFTs more effectively and intuitively based on their intent via AI-powered natural language query, powered by bitsCrunchAPIs and Google Gemini.
 
